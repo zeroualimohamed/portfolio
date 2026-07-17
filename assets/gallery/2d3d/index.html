@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D &amp; 3D Work | Mohamed Zerouali</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0f161c; --card: #16222e; --primary: #63b3cf; --text: #eef6f8; --muted: #8faab9; --line: rgba(99, 179, 207, 0.22); }
+        * { box-sizing: border-box; }
+        body { min-height: 100svh; margin: 0; overflow: hidden; background: radial-gradient(circle at 70% 10%, #1a3a4a, transparent 32rem), var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; }
+        main { min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; max-width: 1220px; margin: 0 auto; padding: clamp(1.25rem, 3vw, 2.5rem); }
+        a { color: var(--primary); text-decoration: none; }
+        .topbar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+        .back { font-size: 0.9rem; font-weight: 700; }
+        .counter { color: var(--muted); font-size: 0.85rem; }
+        header { align-self: end; padding: 2rem 0 1.25rem; }
+        h1 { margin: 0 0 0.45rem; font: 700 clamp(2rem, 5vw, 3.2rem)/1.05 'Outfit', sans-serif; letter-spacing: -0.04em; }
+        header p { margin: 0; color: var(--muted); }
+        .stage { min-height: 0; overflow: hidden; position: relative; display: flex; align-items: center; }
+        .gallery-track { display: flex; gap: clamp(0.75rem, 2vw, 1.5rem); width: max-content; transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1); padding: 0 10vw; }
+        .gallery-item { flex: 0 0 min(68vw, 720px); margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--card); opacity: 0.42; filter: blur(5px) saturate(0.7); transform: scale(0.9); transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease, border-color 0.5s ease; cursor: pointer; }
+        .gallery-item.active { opacity: 1; filter: none; transform: scale(1); border-color: rgba(99, 179, 207, 0.7); box-shadow: 0 14px 45px rgba(0, 0, 0, 0.38); cursor: default; }
+        .gallery-item img, .gallery-item video { display: block; width: 100%; height: min(55vh, 520px); object-fit: contain; background: #0b1116; }
+        figcaption { display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; font: 600 0.9rem 'Outfit', sans-serif; }
+        figcaption span { color: var(--muted); font: 400 0.82rem 'Plus Jakarta Sans', sans-serif; }
+        .controls { display: flex; gap: 0.7rem; justify-content: flex-end; padding-top: 1rem; }
+        button { width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 50%; background: rgba(15,22,28,.75); color: var(--text); cursor: pointer; font-size: 1.25rem; transition: .2s ease; }
+        button:hover { color: #0f161c; background: var(--primary); border-color: var(--primary); }
+        @media (max-width: 700px) { .gallery-track { padding: 0 7vw; } .gallery-item { flex-basis: 82vw; } .gallery-item img, .gallery-item video { height: min(52vh, 440px); } header { padding-top: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="topbar">
+            <a class="back" href="../../../index.html">← Back to portfolio</a>
+            <span class="counter" id="counter">01 / 21</span>
+        </div>
+        <header>
+            <h1>2D &amp; 3D Work</h1>
+            <p>Move across the archive. The next piece appears at the edge until you focus it.</p>
+        </header>
+        <section class="stage" aria-label="2D and 3D work gallery">
+            <div class="gallery-track" id="gallery-track">
+                <figure class="gallery-item"><img src="window%20final%20FINAL.jpg" alt="Visual work 01"><figcaption>Visual work 01<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="war%20zrwlx2--.jpg" alt="Visual work 02"><figcaption>Visual work 02<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="Vampyre%20Dawn%20OLD%20(10).jpg" alt="Visual work 03"><figcaption>Visual work 03<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="dead%20astronot%20space%201.jpg" alt="Visual work 04"><figcaption>Visual work 04<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="dmc%20cover%20cdopy.jpg" alt="Visual work 05"><figcaption>Visual work 05<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="Eclipse%20of%20Fallen%20Souls%204%20hight%20no%20compositor%20final%20copy.jpg" alt="Visual work 06"><figcaption>Visual work 06<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="FALLEN%20ANGEL%20test.jpg" alt="Visual work 07"><figcaption>Visual work 07<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="FALLEN%20ANGEL%20%D8%AE%D9%82%D9%87%D9%84%D9%87%D9%89%D8%B4%D9%85.jpg" alt="Visual work 08"><figcaption>Visual work 08<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="freedom%20guyww1%20copy.jpg" alt="Visual work 09"><figcaption>Visual work 09<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="goat%20got%20killed%20hight%20copy%20final%201.jpg" alt="Visual work 10"><figcaption>Visual work 10<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="grass%20guy1%20copy.jpg" alt="Visual work 11"><figcaption>Visual work 11<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="helix%20of%20doom%20final%206.jpg" alt="Visual work 12"><figcaption>Visual work 12<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="HELLSING%20222.jpg" alt="Visual work 13"><figcaption>Visual work 13<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="knight1%20%20idk%20copydd.jpg" alt="Visual work 14"><figcaption>Visual work 14<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="moster%20poster%20tenma%20copy.jpg" alt="Visual work 15"><figcaption>Visual work 15<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="samuraya%20%20scene%20(%20completed%20%20)%20(the%20good%20one%20).jpg" alt="Visual work 16"><figcaption>Visual work 16<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="samuraya%20the%20cutting%20scene%20(%20completed%20%20).jpg" alt="Visual work 17"><figcaption>Visual work 17<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="stein%20gate%20finaljpg.jpg" alt="Visual work 18"><figcaption>Visual work 18<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="surrender2%20csopy.jpg" alt="Visual work 19"><figcaption>Visual work 19<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="Vampyre%20Dawn%20OLD%20(1).jpg" alt="Visual work 20"><figcaption>Visual work 20<span>2D / 3D work</span></figcaption></figure>
+                <figure class="gallery-item"><img src="war%20copy1.jpg" alt="Visual work 21"><figcaption>Visual work 21<span>2D / 3D work</span></figcaption></figure>
+            </div>
+        </section>
+        <div class="controls" aria-label="Gallery controls">
+            <button type="button" id="previous" aria-label="Previous work">‹</button>
+            <button type="button" id="next" aria-label="Next work">›</button>
+        </div>
+    </main>
+    <script>
+        const track = document.getElementById('gallery-track');
+        const items = Array.from(track.children);
+        const counter = document.getElementById('counter');
+        let activeIndex = 0;
+
+        function updateGallery() {
+            const activeItem = items[activeIndex];
+            const viewportCenter = track.parentElement.clientWidth / 2;
+            const itemCenter = activeItem.offsetLeft + activeItem.offsetWidth / 2;
+            track.style.transform = 'translateX(' + (viewportCenter - itemCenter) + 'px)';
+            items.forEach((item, index) => item.classList.toggle('active', index === activeIndex));
+            counter.textContent = String(activeIndex + 1).padStart(2, '0') + ' / ' + String(items.length).padStart(2, '0');
+        }
+
+        function changeSlide(direction) {
+            activeIndex = (activeIndex + direction + items.length) % items.length;
+            updateGallery();
+        }
+
+        document.getElementById('previous').addEventListener('click', () => changeSlide(-1));
+        document.getElementById('next').addEventListener('click', () => changeSlide(1));
+        items.forEach((item, index) => item.addEventListener('mouseenter', () => {
+            if (index !== activeIndex) { activeIndex = index; updateGallery(); }
+        }));
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+        });
+        window.addEventListener('resize', updateGallery);
+        updateGallery();
+    </script>
+</body>
+</html>
