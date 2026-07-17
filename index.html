@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Mohamed Zerouali | Information Systems Student</title>
+    
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- ICONS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- ANIMATION -->
+    <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+
+    <!-- SITE ICONS -->
+    <link rel="icon" href="assets/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="boot-screen" aria-hidden="true">
+    <div class="boot-label">MOHAMED.Z / PORTFOLIO</div>
+    <div class="boot-text" id="boot-text"></div>
+</div>
+
+<!-- VIDEO BACKGROUND -->
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="videos/background.webm" type="video/webm">
+</video>
+<div class="video-overlay"></div>
+
+<nav class="main-nav">
+    <div class="nav-content">
+        <a href="#hero" class="logo">MOHAMED<span class="dot">.</span></a>
+        
+        <div class="nav-links">
+            <a href="#hero" data-i18n="nav_home">Home</a>
+            <a href="#education" data-i18n="nav_edu">Education</a>
+            <a href="#skills" data-i18n="nav_competence">Competence</a>
+            <a href="#certifications" data-i18n="nav_certs">Degree</a>
+            <a href="#projects" data-i18n="nav_projects">Projects</a>
+            <a href="#contact" data-i18n="nav_contact">Contact</a>
+        </div>
+        <div class="nav-controls" aria-label="Language selection">
+            <div class="lang-switch">
+                <button class="lang-opt active" id="btn-en" type="button" onclick="setLanguage('en')">EN</button>
+                <span class="divider">/</span>
+                <button class="lang-opt" id="btn-fr" type="button" onclick="setLanguage('fr')">FR</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <div class="hero-text" data-aos="fade-right">
+            <span class="hero-badge" data-i18n="hero_badge">Information Systems &amp; Databases Student</span>
+            <h1>Mohamed Zerouali </h1><br>
+                <h2><span class="gradient-text" data-i18n="hero_title">Future Information Systems Engineer.</span>
+            </h2    >
+            <p class="hero-description" data-i18n="hero_desc">
+                Information Systems engineering student focused on database design,
+                system analysis, and software development. Strong foundation in SQL,
+                data modeling, algorithms, and structured application development.
+            </p>
+            <div class="hero-btns">
+                <a href="#projects" class="primary-btn" data-i18n="btn_view_project">View Projects</a>
+                <a href="#contact" class="secondary-btn" data-i18n="btn_contact">Contact Me</a>
+            </div>
+        </div>
+        <div class="hero-visual" data-aos="fade-left">
+            <div class="image-container">
+                <!-- Update with your image -->
+                <img src="assets/IMG_6516 cdddddopy.jpg" alt="Mohamed Zerouali">
+                <div class="glowing-circle"></div>
+            </div>
+        </div>
+    </section>
+
+   <!-- EDUCATION SECTION -->
+   <section class="container" id="education">
+    <h2 data-aos="fade-up" data-i18n="section_edu">Education Path</h2>
+    <div class="timeline-wrapper">
+        
+        <!-- fac -->
+        <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-dot"></div>
+            <article class="timeline-content">
+                <div class="timeline-header">
+                    <h3>Engineering in Information Systems</h3>
+                    <span class="date">2023 – 2026</span>
+                </div>
+                <p class="company">Faculté Polydisciplinaire de Taza</p>
+                <p class="desc">
+                    Engineering program covering databases, information systems,
+                    programming, operating systems, and software project development.
+                </p>
+            </article>
+        </div>
+
+        
+
+        <!-- Bac -->
+        <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="timeline-dot"></div>
+            <article class="timeline-content">
+                <div class="timeline-header">
+                    <h3 data-i18n="edu_bac_title">College  Diploma - Physics</h3>
+                    <span class="date">2023</span>
+                </div>
+                
+                <p class="desc" data-i18n="edu_bac_desc">Focus on Physics and Mathematics.</p>
+            </article>
+        </div>
+
+    </div>
+</section>
+
+    <!-- SKILLS SECTION -->
+    <section class="container" id="skills">
+        <h2 data-aos="fade-up" data-i18n="section_competence">Competence</h2>
+        <div class="skills-grid">
+            
+            <div class="skill-card" data-aos="zoom-in">
+                <i class='bx bx-network-chart skill-icon'></i>
+                <h3>Databases</h3>
+                <p>Oracle, MySQL, PostgreSQL, SQLite, relational design, normalization, constraints.</p>
+            </div>
+
+            <div class="skill-card" data-aos="zoom-in" data-aos-delay="100">
+                <i class='bx bxl-windows skill-icon'></i>
+                <h3>Programming</h3>
+                <p>C, C++, PHP, Java, PL/SQL, SQL, NoSQL, algorithms.</p>
+            </div>
+
+            <div class="skill-card" data-aos="zoom-in" data-aos-delay="200">
+                <i class='bx bxs-cloud skill-icon'></i>
+                <h3>Information Systems</h3>
+                <p>System analysis, modeling, structured design.</p>
+            </div>
+
+            <div class="skill-card" data-aos="zoom-in" data-aos-delay="300">
+                <i class='bx bx-globe skill-icon'></i>
+                <h3>Languages</h3>
+                <p>Arabic (Native) · French (B1-B2) · English (B2-C1)</p>
+            </div>
+           <a class="skill-card creative-card" data-aos="zoom-in" data-aos-delay="300" href="assets/gallery/2d3d/index.html" aria-label="Open the 2D and 3D work gallery">
+    <!-- Fixed icon: use direct SVG from Fluent UI -->
+    <div class="skill-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14l4-4h12c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V9h2v3zm4 0h-2V9h2v3zm-8 0H6V9h2v3z"/>
+        </svg>
+    </div>
+    <h3>2D-3D</h3>
+    <p>Adobe Photoshop - Blender3d</p>
+    <span class="creative-card-hint"><i class='bx bx-mouse'></i> Hover to open gallery</span>
+</a>
+
+
+        </div>
+    </section>
+
+    <!-- CERTIFICATIONS SECTION -->
+    <section class="container" id="certifications">
+        <h2 data-aos="fade-up" data-i18n="section_certs">Degree</h2>
+        <div class="cert-grid">
+            <div class="cert-card" data-aos="fade-up">
+                <div class="cert-icon-box"><i class='bx bx-award'></i></div>
+                <div class="cert-details">
+                    <h3>Engineering in Information Systems</h3>
+                    <p class="issuer">Faculté Polydisciplinaire de Taza</p>
+                    <span class="date">2023 - 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section class="container" id="projects">
+        <h2 data-aos="fade-up" data-i18n="section_projects">Projects</h2>
+        <div class="projects-grid">
+            
+            <div class="project-card" data-aos="fade-up">
+                <div class="project-content">
+                    <h3>Personnel Projects</h3>
+                    <p>
+                        Soon
+                    </p>
+                </div>
+            </div>
+
+        </div> 
+    </section>
+
+<!-- CONTACT SECTION -->
+<section class="container" id="contact">
+    <div class="contact-card" data-aos="fade-up">
+        
+        <!-- Left Side: Info -->
+        <div class="contact-info">
+            <h2 data-i18n="section_contact">Let's Connect</h2>
+            <p data-i18n="contact_desc">I am currently open to internship and apprenticeship opportunities. Feel free to reach out!</p>
+            
+            <div class="contact-links">
+                <a href="mailto:Heliosxiphas@gmail.com" class="contact-pill">
+                    <div class="icon-box"><i class='bx bx-envelope'></i></div>
+                    <span>Email Me</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mohamed-zerouali-aa413b407/" class="contact-pill" target="_blank" rel="noopener noreferrer">
+                    <div class="icon-box"><i class='bx bxl-linkedin'></i></div>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/Zeroualixxx" class="contact-pill">
+                    <div class="icon-box"><i class='bx bxl-github'></i></div>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <form action="https://formspree.io/f/mgovnaar" method="POST" class="contact-form" id="contact-form">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="message" required placeholder="Write your message here..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn" data-i18n="btn_send">Send Message <i class='bx bx-send'></i></button>
+            </form>
+
+    </div>
+</section>
+</main>
+
+<footer class="main-footer">
+<p>© 2025 Mohamed Zerouali.</p>
+</footer>
+
+<!-- MODALS -->
+<div class="modal project-modal" id="project-modal-1">
+<div class="modal-content">
+    <button class="close-button"><i class='bx bx-x'></i></button>
+    <div class="project-modal-body">
+        <div class="project-modal-image-wrapper"></div>
+        <div class="project-modal-description"></div>
+        <div class="project-modal-controls">
+            <button class="control-btn prev"><i class='bx bx-chevron-left'></i></button>
+            <div class="project-modal-counter"></div>
+            <button class="control-btn next"><i class='bx bx-chevron-right'></i></button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal project-modal" id="project-modal-2">
+<div class="modal-content">
+    <button class="close-button"><i class='bx bx-x'></i></button>
+    <div class="project-modal-body">
+        <div class="project-modal-image-wrapper"></div>
+        <div class="project-modal-description"></div>
+        <div class="project-modal-controls">
+            <button class="control-btn prev"><i class='bx bx-chevron-left'></i></button>
+            <div class="project-modal-counter"></div>
+            <button class="control-btn next"><i class='bx bx-chevron-right'></i></button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal" id="image-modal">
+<div class="modal-content image-zoom-content">
+    <button class="close-button"><i class='bx bx-x'></i></button>
+    <img src="" alt="Enlarged">
+</div>
+</div>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<!-- CACHE BUSTER ADDED (?v=2) TO FORCE RELOAD -->
+<script src="script.js?v=2"></script>
+</body>
+</html>
+
+
+
+
+
+
+
