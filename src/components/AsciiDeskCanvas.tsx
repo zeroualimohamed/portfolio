@@ -328,30 +328,29 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
     file: string;
     lang: string;
     lines: string[];
+    text: string;
     typedCount: number;
     pauseUntil: number;
   }>({
     file: SNIPPETS.default.file,
     lang: SNIPPETS.default.lang,
     lines: SNIPPETS.default.lines,
+    text: SNIPPETS.default.lines.join("\n"),
     typedCount: 115,
     pauseUntil: 0,
   });
 
-  const userInputRef = useRef<{ text: string; until: number }>({ text: "", until: 0 });
   const triggerKeyRef = useRef<((char: string, fromUser?: boolean) => void) | null>(null);
 
   useEffect(() => {
     skillRef.current = activeSkill;
-    if (activeSkill) {
-      userInputRef.current.until = 0;
-    }
     const key = selectSnippetKey(activeSkill);
     const sn = SNIPPETS[key];
     snippetRef.current = {
       file: sn.file,
       lang: sn.lang,
       lines: sn.lines,
+      text: sn.lines.join("\n"),
       typedCount: activeSkill ? 42 : 115,
       pauseUntil: 0,
     };
@@ -449,21 +448,18 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
       if (tag === "INPUT" || tag === "TEXTAREA" || target?.isContentEditable) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+      const sn = snippetRef.current;
       const now = performance.now();
-      const ui = userInputRef.current;
-
-      if (e.key === "Escape") {
-        ui.text = "";
-        ui.until = 0;
-        return;
-      }
 
       if (e.key === "Backspace") {
         if (!inView) return;
         e.preventDefault();
-        if (now >= ui.until) ui.text = "";
-        ui.text = ui.text.slice(0, -1);
-        ui.until = now + 10000;
+        sn.pauseUntil = 0;
+        if (sn.typedCount > 0) {
+          sn.text = sn.text.slice(0, sn.typedCount - 1) + sn.text.slice(sn.typedCount);
+          sn.typedCount -= 1;
+        }
+        nextAutoType = Math.max(nextAutoType, now + 650);
         strikeCharacter("BACKSPACE", true);
         return;
       }
@@ -471,9 +467,10 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
       if (e.key === "Enter") {
         if (!inView) return;
         e.preventDefault();
-        if (now >= ui.until) ui.text = "";
-        ui.text += "\n";
-        ui.until = now + 10000;
+        sn.pauseUntil = 0;
+        sn.text = sn.text.slice(0, sn.typedCount) + "\n" + sn.text.slice(sn.typedCount);
+        sn.typedCount += 1;
+        nextAutoType = Math.max(nextAutoType, now + 650);
         strikeCharacter("\n", true);
         return;
       }
@@ -481,14 +478,13 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
       if (e.key.length === 1) {
         if (e.key === " " && !inView) return;
         if (e.key === " " && inView) e.preventDefault();
-        if (now >= ui.until) ui.text = "";
-        const curLines = ui.text.split("\n");
-        const lastLine = curLines[curLines.length - 1] ?? "";
-        if (lastLine.length >= 42) {
-          ui.text += "\n";
-        }
-        ui.text += e.key;
-        ui.until = now + 10000;
+        sn.pauseUntil = 0;
+        const before = sn.text.slice(0, sn.typedCount);
+        const curLineLen = before.length - before.lastIndexOf("\n") - 1;
+        const ins = curLineLen >= 42 ? `\n${e.key}` : e.key;
+        sn.text = before + ins + sn.text.slice(sn.typedCount);
+        sn.typedCount += ins.length;
+        nextAutoType = Math.max(nextAutoType, now + 650);
         strikeCharacter(e.key, true);
       }
     };
@@ -533,12 +529,10 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
         curRgb[2] += (tgt[2] - curRgb[2]) * 0.08;
 
         const sn = snippetRef.current;
-        const ui = userInputRef.current;
-        const isUserMode = now < ui.until;
-        const fullText = sn.lines.join("\n");
-        const isNormalMode = !isUserMode && now < sn.pauseUntil;
+        const fullText = sn.text;
+        const isNormalMode = now < sn.pauseUntil;
 
-        if (!isUserMode && !reduceMotion && now >= nextAutoType && !isNormalMode) {
+        if (!reduceMotion && now >= nextAutoType && !isNormalMode) {
           if (sn.typedCount >= fullText.length) {
             sn.pauseUntil = now + 1550;
           } else {
@@ -547,8 +541,9 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
             strikeCharacter(nextChar, false);
           }
           nextAutoType = now + (skillRef.current ? 72 : 125 + Math.random() * 130);
-        } else if (!isUserMode && !reduceMotion && sn.pauseUntil > 0 && now >= sn.pauseUntil) {
+        } else if (!reduceMotion && sn.pauseUntil > 0 && now >= sn.pauseUntil) {
           sn.pauseUntil = 0;
+          sn.text = sn.lines.join("\n");
           sn.typedCount = 12;
         }
 
@@ -614,23 +609,19 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
         ctx.fillRect(scrX, scrY, scrW, scrH);
 
         ctx.textAlign = "left";
-        const activeFile = isUserMode ? "live_input.txt" : sn.file;
-        const otherTabs = isUserMode
-          ? "   ml_pipeline.py   schema.sql"
-          : sn.file === "ml_pipeline.py"
+        const otherTabs =
+          sn.file === "ml_pipeline.py"
             ? "   schema.sql   cyber_s2.sh"
             : "   ml_pipeline.py   render.py";
         ctx.fillStyle = "rgba(240, 245, 250, 0.88)";
-        ctx.fillText(`${activeFile} x${otherTabs}`, scrX + cw, oy + 3.6 * ch);
+        ctx.fillText(`${sn.file} x${otherTabs}`, scrX + cw, oy + 3.6 * ch);
         ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, 0.45)`;
         ctx.fillRect(scrX + cw, oy + 4.35 * ch, scrW - cw * 2, 1);
 
-        const allUserLines = isUserMode ? ui.text.split("\n") : [];
-        const userStartIdx = isUserMode ? Math.max(0, allUserLines.length - 8) : 0;
-        const visible = isUserMode
-          ? allUserLines.slice(userStartIdx)
-          : fullText.slice(0, sn.typedCount).split("\n");
-        const totalRows = isUserMode ? Math.max(8, visible.length) : sn.lines.length;
+        const allVisible = fullText.slice(0, sn.typedCount).split("\n");
+        const startIdx = Math.max(0, allVisible.length - 8);
+        const visible = allVisible.slice(startIdx);
+        const totalRows = Math.max(sn.lines.length, visible.length);
 
         for (let i = 0; i < totalRows; i++) {
           const lineRow = 5.3 + i * 0.96;
@@ -638,7 +629,7 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
           const ly = oy + lineRow * ch;
 
           ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, 0.48)`;
-          ctx.fillText(String(userStartIdx + i + 1).padStart(2, "0") + "|", scrX + cw, ly);
+          ctx.fillText(String(startIdx + i + 1).padStart(2, "0") + "|", scrX + cw, ly);
 
           const textLine = visible[i] ?? "";
           if (textLine.length > 0 || i === visible.length - 1) {
@@ -657,14 +648,14 @@ export function AsciiDeskCanvas({ vibeRgb, activeSkill }: AsciiDeskCanvasProps) 
           }
         }
 
-        const ln = isUserMode ? allUserLines.length : visible.length;
+        const ln = allVisible.length;
         const col = (visible[visible.length - 1]?.length ?? 0) + 1;
         const statusY = oy + 14.1 * ch;
         ctx.fillStyle = isNormalMode ? "rgba(236, 242, 246, 0.68)" : `rgba(${cr}, ${cg}, ${cb}, 0.9)`;
         ctx.fillText(isNormalMode ? "-- NORMAL --" : "-- INSERT --", scrX + cw, statusY);
         ctx.textAlign = "right";
         ctx.fillStyle = "rgba(236, 242, 246, 0.72)";
-        ctx.fillText(`${isUserMode ? "LIVE" : sn.lang}  UTF-8  Ln ${ln}, Col ${col}`, scrX + scrW - cw, statusY);
+        ctx.fillText(`${sn.lang}  UTF-8  Ln ${ln}, Col ${col}`, scrX + scrW - cw, statusY);
         ctx.restore();
 
         // Brand badge Z R W L X + CRT indicators
