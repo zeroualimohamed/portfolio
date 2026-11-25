@@ -139,10 +139,14 @@ export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
           }),
         });
         const data = (await res.json().catch(() => null)) as
-          | { success?: boolean | string }
+          | { success?: boolean | string; message?: string }
           | null;
         if (!res.ok || (data && data.success === false) || (data && data.success === "false")) {
-          throw new Error("Submit failed");
+          if (data?.message && /activat/i.test(data.message)) {
+            setStatus({ text: data.message, kind: "err" });
+            return;
+          }
+          throw new Error(data?.message || "Submit failed");
         }
         setName("");
         setEmail("");
