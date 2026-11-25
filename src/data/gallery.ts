@@ -1,0 +1,626 @@
+export type Orientation = "landscape" | "portrait" | "square";
+
+export interface ArtworkVibe {
+  accent: string;
+  rgb: string;
+  tint: string;
+  mood: string;
+}
+
+export interface Artwork {
+  index: number;
+  slug: string;
+  title: string;
+  series: string;
+  featured: boolean;
+  orientation: Orientation;
+  origWidth: number;
+  origHeight: number;
+  origBytes: number;
+  thumbWidth: number;
+  thumbHeight: number;
+  thumbBytes: number;
+  fullWidth: number;
+  fullHeight: number;
+  fullBytes: number;
+  fullJpgBytes: number;
+  thumb: string;
+  full: string;
+  fullJpg: string;
+  vibe: ArtworkVibe;
+}
+
+export interface GalleryManifest {
+  stats: {
+    count: number;
+    totalOrigBytes: number;
+    totalThumbBytes: number;
+    totalFullBytes: number;
+    counts: Record<"all" | Orientation, number>;
+  };
+  works: Artwork[];
+}
+
+export const GALLERY_DATA: GalleryManifest = {
+  "stats": {
+    "count": 21,
+    "totalOrigBytes": 200384543,
+    "totalThumbBytes": 966618,
+    "totalFullBytes": 7907764,
+    "counts": {
+      "all": 21,
+      "landscape": 12,
+      "portrait": 5,
+      "square": 4
+    }
+  },
+  "works": [
+    {
+      "index": 1,
+      "slug": "vampyre-dawn",
+      "title": "Vampyre Dawn",
+      "series": "HELIOS · 2023",
+      "featured": true,
+      "orientation": "square",
+      "origWidth": 1620,
+      "origHeight": 1776,
+      "origBytes": 1293427,
+      "thumbWidth": 584,
+      "thumbHeight": 640,
+      "thumbBytes": 26462,
+      "fullWidth": 1620,
+      "fullHeight": 1776,
+      "fullBytes": 156688,
+      "fullJpgBytes": 244886,
+      "thumb": "./assets/gallery/thumbs/vampyre-dawn.webp",
+      "full": "./assets/gallery/full/vampyre-dawn.webp",
+      "fullJpg": "./assets/gallery/full/vampyre-dawn.jpg",
+      "vibe": {
+        "accent": "#e0492e",
+        "rgb": "224, 73, 46",
+        "tint": "#1c0b08",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 2,
+      "slug": "last-stand",
+      "title": "Last Stand",
+      "series": "HELIOS · Poster",
+      "featured": true,
+      "orientation": "landscape",
+      "origWidth": 2454,
+      "origHeight": 1380,
+      "origBytes": 2190468,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 35516,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 199266,
+      "fullJpgBytes": 258197,
+      "thumb": "./assets/gallery/thumbs/last-stand.webp",
+      "full": "./assets/gallery/full/last-stand.webp",
+      "fullJpg": "./assets/gallery/full/last-stand.jpg",
+      "vibe": {
+        "accent": "#e08f50",
+        "rgb": "224, 143, 80",
+        "tint": "#1c150f",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 3,
+      "slug": "last-stand-intermission",
+      "title": "Last Stand: Intermission",
+      "series": "3D Scene",
+      "featured": true,
+      "orientation": "landscape",
+      "origWidth": 4992,
+      "origHeight": 2808,
+      "origBytes": 932656,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 7228,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 43200,
+      "fullJpgBytes": 89666,
+      "thumb": "./assets/gallery/thumbs/last-stand-intermission.webp",
+      "full": "./assets/gallery/full/last-stand-intermission.webp",
+      "fullJpg": "./assets/gallery/full/last-stand-intermission.jpg",
+      "vibe": {
+        "accent": "#8ae050",
+        "rgb": "138, 224, 80",
+        "tint": "#141c0f",
+        "mood": "Emerald Moss"
+      }
+    },
+    {
+      "index": 4,
+      "slug": "eclipse-of-fallen-souls",
+      "title": "Eclipse of Fallen Souls",
+      "series": "3D Environment",
+      "featured": true,
+      "orientation": "landscape",
+      "origWidth": 4992,
+      "origHeight": 2808,
+      "origBytes": 4710331,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 18874,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 101352,
+      "fullJpgBytes": 150725,
+      "thumb": "./assets/gallery/thumbs/eclipse-of-fallen-souls.webp",
+      "full": "./assets/gallery/full/eclipse-of-fallen-souls.webp",
+      "fullJpg": "./assets/gallery/full/eclipse-of-fallen-souls.jpg",
+      "vibe": {
+        "accent": "#e06950",
+        "rgb": "224, 105, 80",
+        "tint": "#1c0f0c",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 5,
+      "slug": "adrift",
+      "title": "Adrift",
+      "series": "3D Scene",
+      "featured": true,
+      "orientation": "landscape",
+      "origWidth": 4716,
+      "origHeight": 2870,
+      "origBytes": 16813106,
+      "thumbWidth": 640,
+      "thumbHeight": 389,
+      "thumbBytes": 25656,
+      "fullWidth": 1800,
+      "fullHeight": 1095,
+      "fullBytes": 145750,
+      "fullJpgBytes": 216282,
+      "thumb": "./assets/gallery/thumbs/adrift.webp",
+      "full": "./assets/gallery/full/adrift.webp",
+      "fullJpg": "./assets/gallery/full/adrift.jpg",
+      "vibe": {
+        "accent": "#50e060",
+        "rgb": "80, 224, 96",
+        "tint": "#111c13",
+        "mood": "Emerald Moss"
+      }
+    },
+    {
+      "index": 6,
+      "slug": "helix-of-doom",
+      "title": "Helix of Doom",
+      "series": "3D Composition",
+      "featured": true,
+      "orientation": "landscape",
+      "origWidth": 4000,
+      "origHeight": 3616,
+      "origBytes": 9012468,
+      "thumbWidth": 640,
+      "thumbHeight": 579,
+      "thumbBytes": 64184,
+      "fullWidth": 1800,
+      "fullHeight": 1627,
+      "fullBytes": 365250,
+      "fullJpgBytes": 506141,
+      "thumb": "./assets/gallery/thumbs/helix-of-doom.webp",
+      "full": "./assets/gallery/full/helix-of-doom.webp",
+      "fullJpg": "./assets/gallery/full/helix-of-doom.jpg",
+      "vibe": {
+        "accent": "#e05067",
+        "rgb": "224, 80, 103",
+        "tint": "#1c0c0e",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 7,
+      "slug": "window-study",
+      "title": "Window",
+      "series": "3D Scene",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 3840,
+      "origHeight": 2160,
+      "origBytes": 5913523,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 21166,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 110662,
+      "fullJpgBytes": 181598,
+      "thumb": "./assets/gallery/thumbs/window-study.webp",
+      "full": "./assets/gallery/full/window-study.webp",
+      "fullJpg": "./assets/gallery/full/window-study.jpg",
+      "vibe": {
+        "accent": "#e0ab50",
+        "rgb": "224, 171, 80",
+        "tint": "#1c1811",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 8,
+      "slug": "helios-storm-rift",
+      "title": "Helios: Storm Rift",
+      "series": "HELIOS · 2022",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 1575,
+      "origHeight": 956,
+      "origBytes": 540770,
+      "thumbWidth": 640,
+      "thumbHeight": 388,
+      "thumbBytes": 18994,
+      "fullWidth": 1575,
+      "fullHeight": 956,
+      "fullBytes": 67540,
+      "fullJpgBytes": 121072,
+      "thumb": "./assets/gallery/thumbs/helios-storm-rift.webp",
+      "full": "./assets/gallery/full/helios-storm-rift.webp",
+      "fullJpg": "./assets/gallery/full/helios-storm-rift.jpg",
+      "vibe": {
+        "accent": "#e0862c",
+        "rgb": "224, 134, 44",
+        "tint": "#1c1208",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 9,
+      "slug": "dmc-cover",
+      "title": "DMC Cover Study",
+      "series": "Poster Composition",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 4553,
+      "origHeight": 2561,
+      "origBytes": 21936467,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 67492,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 589492,
+      "fullJpgBytes": 563721,
+      "thumb": "./assets/gallery/thumbs/dmc-cover.webp",
+      "full": "./assets/gallery/full/dmc-cover.webp",
+      "fullJpg": "./assets/gallery/full/dmc-cover.jpg",
+      "vibe": {
+        "accent": "#28d4e0",
+        "rgb": "40, 212, 224",
+        "tint": "#081a1c",
+        "mood": "Storm Cyan"
+      }
+    },
+    {
+      "index": 10,
+      "slug": "fallen-angel-original",
+      "title": "Fallen Angel (Original)",
+      "series": "Dark Fantasy",
+      "featured": false,
+      "orientation": "square",
+      "origWidth": 3378,
+      "origHeight": 3710,
+      "origBytes": 20752057,
+      "thumbWidth": 583,
+      "thumbHeight": 640,
+      "thumbBytes": 70822,
+      "fullWidth": 1639,
+      "fullHeight": 1800,
+      "fullBytes": 797812,
+      "fullJpgBytes": 710331,
+      "thumb": "./assets/gallery/thumbs/fallen-angel-original.webp",
+      "full": "./assets/gallery/full/fallen-angel-original.webp",
+      "fullJpg": "./assets/gallery/full/fallen-angel-original.jpg",
+      "vibe": {
+        "accent": "#e0415b",
+        "rgb": "224, 65, 91",
+        "tint": "#1c080c",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 11,
+      "slug": "fallen-angel-study",
+      "title": "Fallen Angel (Variant)",
+      "series": "Dark Fantasy",
+      "featured": false,
+      "orientation": "square",
+      "origWidth": 3378,
+      "origHeight": 3710,
+      "origBytes": 26050823,
+      "thumbWidth": 583,
+      "thumbHeight": 640,
+      "thumbBytes": 96326,
+      "fullWidth": 1639,
+      "fullHeight": 1800,
+      "fullBytes": 1040432,
+      "fullJpgBytes": 928830,
+      "thumb": "./assets/gallery/thumbs/fallen-angel-study.webp",
+      "full": "./assets/gallery/full/fallen-angel-study.webp",
+      "fullJpg": "./assets/gallery/full/fallen-angel-study.jpg",
+      "vibe": {
+        "accent": "#e034d1",
+        "rgb": "224, 52, 209",
+        "tint": "#1c081a",
+        "mood": "Ultraviolet"
+      }
+    },
+    {
+      "index": 12,
+      "slug": "freedom",
+      "title": "Freedom",
+      "series": "3D Composition",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 7171,
+      "origHeight": 4894,
+      "origBytes": 19276103,
+      "thumbWidth": 640,
+      "thumbHeight": 437,
+      "thumbBytes": 24704,
+      "fullWidth": 1800,
+      "fullHeight": 1228,
+      "fullBytes": 292168,
+      "fullJpgBytes": 321059,
+      "thumb": "./assets/gallery/thumbs/freedom.webp",
+      "full": "./assets/gallery/full/freedom.webp",
+      "fullJpg": "./assets/gallery/full/freedom.jpg",
+      "vibe": {
+        "accent": "#e09016",
+        "rgb": "224, 144, 22",
+        "tint": "#1c1408",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 13,
+      "slug": "sacrifice-study",
+      "title": "Altar Study",
+      "series": "3D Square Study",
+      "featured": false,
+      "orientation": "square",
+      "origWidth": 3000,
+      "origHeight": 3000,
+      "origBytes": 14116022,
+      "thumbWidth": 640,
+      "thumbHeight": 640,
+      "thumbBytes": 38244,
+      "fullWidth": 1800,
+      "fullHeight": 1800,
+      "fullBytes": 399882,
+      "fullJpgBytes": 461983,
+      "thumb": "./assets/gallery/thumbs/sacrifice-study.webp",
+      "full": "./assets/gallery/full/sacrifice-study.webp",
+      "fullJpg": "./assets/gallery/full/sacrifice-study.jpg",
+      "vibe": {
+        "accent": "#e05084",
+        "rgb": "224, 80, 132",
+        "tint": "#1c0f13",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 14,
+      "slug": "meadow-figure",
+      "title": "Meadow Figure",
+      "series": "3D Environment",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 2304,
+      "origHeight": 1296,
+      "origBytes": 3402103,
+      "thumbWidth": 640,
+      "thumbHeight": 360,
+      "thumbBytes": 61672,
+      "fullWidth": 1800,
+      "fullHeight": 1012,
+      "fullBytes": 408964,
+      "fullJpgBytes": 420334,
+      "thumb": "./assets/gallery/thumbs/meadow-figure.webp",
+      "full": "./assets/gallery/full/meadow-figure.webp",
+      "fullJpg": "./assets/gallery/full/meadow-figure.jpg",
+      "vibe": {
+        "accent": "#e08250",
+        "rgb": "224, 130, 80",
+        "tint": "#1c120c",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 15,
+      "slug": "hellsing-poster",
+      "title": "Hellsing Poster",
+      "series": "Poster Composition",
+      "featured": false,
+      "orientation": "portrait",
+      "origWidth": 3145,
+      "origHeight": 4259,
+      "origBytes": 7810791,
+      "thumbWidth": 473,
+      "thumbHeight": 640,
+      "thumbBytes": 44676,
+      "fullWidth": 1329,
+      "fullHeight": 1800,
+      "fullBytes": 355222,
+      "fullJpgBytes": 428955,
+      "thumb": "./assets/gallery/thumbs/hellsing-poster.webp",
+      "full": "./assets/gallery/full/hellsing-poster.webp",
+      "fullJpg": "./assets/gallery/full/hellsing-poster.jpg",
+      "vibe": {
+        "accent": "#e01916",
+        "rgb": "224, 25, 22",
+        "tint": "#1c0908",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 16,
+      "slug": "knight-study",
+      "title": "Knight Study",
+      "series": "3D Character",
+      "featured": false,
+      "orientation": "portrait",
+      "origWidth": 2958,
+      "origHeight": 3566,
+      "origBytes": 9400057,
+      "thumbWidth": 531,
+      "thumbHeight": 640,
+      "thumbBytes": 47440,
+      "fullWidth": 1493,
+      "fullHeight": 1800,
+      "fullBytes": 472074,
+      "fullJpgBytes": 531075,
+      "thumb": "./assets/gallery/thumbs/knight-study.webp",
+      "full": "./assets/gallery/full/knight-study.webp",
+      "fullJpg": "./assets/gallery/full/knight-study.jpg",
+      "vibe": {
+        "accent": "#e08e50",
+        "rgb": "224, 142, 80",
+        "tint": "#1c1611",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 17,
+      "slug": "monster-tenma-poster",
+      "title": "Monster: Tenma Poster",
+      "series": "Poster Composition",
+      "featured": false,
+      "orientation": "portrait",
+      "origWidth": 2670,
+      "origHeight": 3592,
+      "origBytes": 8238602,
+      "thumbWidth": 476,
+      "thumbHeight": 640,
+      "thumbBytes": 58448,
+      "fullWidth": 1338,
+      "fullHeight": 1800,
+      "fullBytes": 653982,
+      "fullJpgBytes": 599657,
+      "thumb": "./assets/gallery/thumbs/monster-tenma-poster.webp",
+      "full": "./assets/gallery/full/monster-tenma-poster.webp",
+      "fullJpg": "./assets/gallery/full/monster-tenma-poster.jpg",
+      "vibe": {
+        "accent": "#da50e0",
+        "rgb": "218, 80, 224",
+        "tint": "#1b0c1c",
+        "mood": "Ultraviolet"
+      }
+    },
+    {
+      "index": 18,
+      "slug": "samurai-scene",
+      "title": "Samurai Scene",
+      "series": "3D Scene",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 3097,
+      "origHeight": 1829,
+      "origBytes": 8035180,
+      "thumbWidth": 640,
+      "thumbHeight": 378,
+      "thumbBytes": 53626,
+      "fullWidth": 1800,
+      "fullHeight": 1063,
+      "fullBytes": 316360,
+      "fullJpgBytes": 368543,
+      "thumb": "./assets/gallery/thumbs/samurai-scene.webp",
+      "full": "./assets/gallery/full/samurai-scene.webp",
+      "fullJpg": "./assets/gallery/full/samurai-scene.jpg",
+      "vibe": {
+        "accent": "#e0ab50",
+        "rgb": "224, 171, 80",
+        "tint": "#1c150b",
+        "mood": "Amber Flame"
+      }
+    },
+    {
+      "index": 19,
+      "slug": "samurai-the-cut",
+      "title": "Samurai: The Cut",
+      "series": "3D Scene",
+      "featured": false,
+      "orientation": "landscape",
+      "origWidth": 2528,
+      "origHeight": 1503,
+      "origBytes": 5039655,
+      "thumbWidth": 640,
+      "thumbHeight": 381,
+      "thumbBytes": 53524,
+      "fullWidth": 1800,
+      "fullHeight": 1070,
+      "fullBytes": 310658,
+      "fullJpgBytes": 375179,
+      "thumb": "./assets/gallery/thumbs/samurai-the-cut.webp",
+      "full": "./assets/gallery/full/samurai-the-cut.webp",
+      "fullJpg": "./assets/gallery/full/samurai-the-cut.jpg",
+      "vibe": {
+        "accent": "#50a4e0",
+        "rgb": "80, 164, 224",
+        "tint": "#15191c",
+        "mood": "Storm Cyan"
+      }
+    },
+    {
+      "index": 20,
+      "slug": "steins-gate-poster",
+      "title": "Steins;Gate Poster",
+      "series": "Poster Composition",
+      "featured": false,
+      "orientation": "portrait",
+      "origWidth": 2066,
+      "origHeight": 2838,
+      "origBytes": 7198890,
+      "thumbWidth": 466,
+      "thumbHeight": 640,
+      "thumbBytes": 71492,
+      "fullWidth": 1310,
+      "fullHeight": 1800,
+      "fullBytes": 547996,
+      "fullJpgBytes": 568523,
+      "thumb": "./assets/gallery/thumbs/steins-gate-poster.webp",
+      "full": "./assets/gallery/full/steins-gate-poster.webp",
+      "fullJpg": "./assets/gallery/full/steins-gate-poster.jpg",
+      "vibe": {
+        "accent": "#e0214b",
+        "rgb": "224, 33, 75",
+        "tint": "#1c080d",
+        "mood": "Crimson Ember"
+      }
+    },
+    {
+      "index": 21,
+      "slug": "surrender",
+      "title": "Surrender",
+      "series": "3D Character",
+      "featured": false,
+      "orientation": "portrait",
+      "origWidth": 2880,
+      "origHeight": 3227,
+      "origBytes": 7721044,
+      "thumbWidth": 571,
+      "thumbHeight": 640,
+      "thumbBytes": 60072,
+      "fullWidth": 1606,
+      "fullHeight": 1800,
+      "fullBytes": 533014,
+      "fullJpgBytes": 541840,
+      "thumb": "./assets/gallery/thumbs/surrender.webp",
+      "full": "./assets/gallery/full/surrender.webp",
+      "fullJpg": "./assets/gallery/full/surrender.jpg",
+      "vibe": {
+        "accent": "#e06f50",
+        "rgb": "224, 111, 80",
+        "tint": "#1c0f0b",
+        "mood": "Crimson Ember"
+      }
+    }
+  ]
+};

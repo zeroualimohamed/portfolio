@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   ZRWLX Portfolio 3 · Obsidian #000000 Void & Dynamic Artwork Vibe System
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #000000;
+  --bg-panel: #060709;
+  --bg-elevated: #0b0d10;
+  --ink: #f3ece6;
+  --ink-muted: #9d9692;
+  --rule: #1b212a;
+  --rule-strong: #2e3744;
+
+  /* Live accent (default Blood Crimson; switches via header swatches or hovered 2D/3D artwork) */
+  --accent: #e63946;
+  --accent-rgb: 230, 57, 70;
+  --vibe-tint: #1a0709;
+  --eye: #ff1a2a;
+  --on-accent: #000000;
+}
+
+@theme inline {
+  --color-void: var(--bg);
+  --color-panel: var(--bg-panel);
+  --color-elevated: var(--bg-elevated);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+
+  --font-display: "Tektur", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Inter", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Mono", "Consolas", ui-monospace, monospace;
+}
+
+html {
+  scroll-padding-top: 84px;
+  background-color: var(--bg);
+  overflow-x: clip;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+/* Invisible radial dissolve so ASCII canvases melt smoothly into #000000 void */
+.ascii-void-mask {
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 62%, transparent 99%);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 62%, transparent 99%);
+}
+
+/* Soft bottom fade only so Stack CRT monitor & keyboard edges stay crisp */
+.ascii-bottom-fade {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 84%, transparent 100%);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Smooth ambient vibe wash reacting to hovered 2D/3D artwork */
+.vibe-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -5;
+  background: radial-gradient(
+    ellipse 70% 55% at 72% 38%,
+    rgba(var(--accent-rgb), 0.13) 0%,
+    rgba(var(--accent-rgb), 0.03) 45%,
+    transparent 76%
+  );
+  transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1), opacity 480ms ease;
+}
+
+/* Subtle CRT hairline scanlines */
+.crt-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.025;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.5) 2px,
+    rgba(255, 255, 255, 0.5) 3px
+  );
+}
+
+/* Accent corner brackets for terminal framing */
+.bracket-box {
+  position: relative;
+}
+.bracket-box::before,
+.bracket-box::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  transition: border-color 350ms ease;
+}
+.bracket-box::before {
+  top: -3px;
+  left: -3px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+.bracket-box::after {
+  bottom: -3px;
+  right: -3px;
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+/* Frosted pinned header with downward fog veil */
+.hud-header-pinned {
+  background-color: rgba(0, 0, 0, 0.56);
+  -webkit-backdrop-filter: blur(15px) saturate(1.3);
+  backdrop-filter: blur(15px) saturate(1.3);
+}
+.hud-header-pinned::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 22px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent);
+}
+
+/* Contact row warm hover sweep */
+.contact-row-glow {
+  background-color: transparent;
+  transition:
+    background 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    color 320ms ease;
+}
+.contact-row-glow:hover {
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.16), transparent 85%);
+}
+
+/* Marquee animation */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 34s linear infinite;
+}
+.animate-ticker-rev {
+  animation: ticker 38s linear infinite reverse;
+}
+.ticker-wrap:hover .animate-ticker,
+.ticker-wrap:hover .animate-ticker-rev {
+  animation-play-state: paused;
+}
+
+.vibe-sync {
+  transition:
+    color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker,
+  .animate-ticker-rev {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
