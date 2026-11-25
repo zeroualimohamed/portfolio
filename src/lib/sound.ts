@@ -1,11 +1,131 @@
-/* Zero-dependency Web Audio API engine: continuous dark obsidian ambient drone + tactile HUD SFX.
-   Starts muted until user activates the HUD audio toggle. */
+/* Looping calm cyberpunk ambient audio + Web Audio API tactile HUD SFX.
+   Enabled by default; unlocks automatically on the first user gesture if blocked by browser autoplay rules. */
+
+const MUTE_STORAGE_KEY = "zrwlx-sound-muted";
+const BGM_SRC = "./assets/audio/cyberpunk-ambient.mp3";
+const BGM_TARGET_VOL = 0.28;
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
-  private droneMaster: GainNode | null = null;
-  private droneNodes: { stop: () => void }[] = [];
-  public enabled = false;
+  private bgm: HTMLAudioElement | null = null;
+  private fadeTimer: number | null = null;
+  private unlockHandler: (() => void) | null = null;
+  public enabled = true;
+
+  constructor() {
+    if (typeof window === "undefined") return;
+    try {
+      this.enabled = localStorage.getItem(MUTE_STORAGE_KEY) !== "1";
+    } catch {
+      this.enabled = true;
+    }
+
+    if (this.enabled) {
+      this.bindAutoplayUnlock();
+      // Attempt immediate playback for browsers/profiles permitting autoplay
+      window.setTimeout(() => {
+        if (this.enabled) this.startBgm();
+      }, 60);
+    }
+  }
+
+  private bindAutoplayUnlock() {
+    if (this.unlockHandler || typeof window === "undefined") return;
+
+    const unlock = () => {
+      if (!this.enabled) return;
+      this.ensure();
+      this.startBgm();
+    };
+    this.unlockHandler = unlock;
+
+    window.addEventListener("pointerdown", unlock, { passive: true });
+    window.addEventListener("keydown", unlock, { passive: true });
+    window.addEventListener("touchstart", unlock, { passive: true });
+    window.addEventListener("click", unlock, { passive: true });
+  }
+
+  private unbindAutoplayUnlock() {
+    if (!this.unlockHandler || typeof window === "undefined") return;
+    const fn = this.unlockHandler;
+    this.unlockHandler = null;
+    window.removeEventListener("pointerdown", fn);
+    window.removeEventListener("keydown", fn);
+    window.removeEventListener("touchstart", fn);
+    window.removeEventListener("click", fn);
+  }
+
+  private ensureBgm(): HTMLAudioElement | null {
+    if (typeof window === "undefined") return null;
+    if (!this.bgm) {
+      const audio = new Audio(BGM_SRC);
+      audio.loop = true;
+      audio.preload = "auto";
+      audio.volume = 0;
+      this.bgm = audio;
+    }
+    return this.bgm;
+  }
+
+  private fadeBgmTo(target: number, durationMs: number, pauseAtEnd = false) {
+    const audio = this.bgm;
+    if (!audio) return;
+    if (this.fadeTimer !== null) {
+      window.clearInterval(this.fadeTimer);
+      this.fadeTimer = null;
+    }
+    const startVol = audio.volume;
+    const steps = Math.max(1, Math.round(durationMs / 25));
+    let step = 0;
+    this.fadeTimer = window.setInterval(() => {
+      step += 1;
+      const p = Math.min(1, step / steps);
+      audio.volume = Math.max(0, Math.min(1, startVol + (target - startVol) * p));
+      if (p >= 1) {
+        if (this.fadeTimer !== null) {
+          window.clearInterval(this.fadeTimer);
+          this.fadeTimer = null;
+        }
+        if (pauseAtEnd) audio.pause();
+      }
+    }, 25);
+  }
+
+  private startBgm() {
+    if (!this.enabled) return;
+    const audio = this.ensureBgm();
+    if (!audio) return;
+    if (!audio.paused) {
+      if (audio.volume < BGM_TARGET_VOL) this.fadeBgmTo(BGM_TARGET_VOL, 650);
+      return;
+    }
+    audio.volume = 0;
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.then === "function") {
+      playPromise
+        .then(() => {
+          this.unbindAutoplayUnlock();
+          if (this.enabled) {
+            this.fadeBgmTo(BGM_TARGET_VOL, 900);
+          } else {
+            audio.pause();
+          }
+        })
+        .catch(() => {
+          // Blocked by browser autoplay policy until first user gesture
+          this.bindAutoplayUnlock();
+        });
+    } else {
+      this.unbindAutoplayUnlock();
+      this.fadeBgmTo(BGM_TARGET_VOL, 900);
+    }
+  }
+
+  private stopBgm() {
+    this.unbindAutoplayUnlock();
+    if (!this.bgm) return;
+    this.fadeBgmTo(0, 320, true);
+  }
 
   private ensure(): AudioContext | null {
     if (!this.enabled) return null;
@@ -21,119 +141,24 @@ class SoundEngine {
     return this.ctx;
   }
 
-  private startAmbient() {
-    const ctx = this.ensure();
-    if (!ctx || this.droneMaster) return;
-
-    const now = ctx.currentTime;
-    const master = ctx.createGain();
-    master.gain.setValueAtTime(0.0001, now);
-    master.gain.exponentialRampToValueAtTime(0.085, now + 0.85);
-    master.connect(ctx.destination);
-    this.droneMaster = master;
-
-    // Warm resonant lowpass modulated slowly by 0.12 Hz LFO
-    const lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.setValueAtTime(320, now);
-    lp.Q.setValueAtTime(1.6, now);
-    lp.connect(master);
-
-    const lfo = ctx.createOscillator();
-    const lfoGain = ctx.createGain();
-    lfo.type = "sine";
-    lfo.frequency.setValueAtTime(0.12, now);
-    lfoGain.gain.setValueAtTime(110, now);
-    lfo.connect(lfoGain);
-    lfoGain.connect(lp.frequency);
-    lfo.start(now);
-
-    // Dual detuned obsidian sub drones (55 Hz + 58.2 Hz)
-    const osc1 = ctx.createOscillator();
-    osc1.type = "sine";
-    osc1.frequency.setValueAtTime(55, now);
-    const g1 = ctx.createGain();
-    g1.gain.setValueAtTime(0.55, now);
-    osc1.connect(g1);
-    g1.connect(lp);
-    osc1.start(now);
-
-    const osc2 = ctx.createOscillator();
-    osc2.type = "triangle";
-    osc2.frequency.setValueAtTime(58.2, now);
-    const g2 = ctx.createGain();
-    g2.gain.setValueAtTime(0.32, now);
-    osc2.connect(g2);
-    g2.connect(lp);
-    osc2.start(now);
-
-    // Procedural 2s filtered dark CRT room-air buffer
-    const sampleRate = ctx.sampleRate;
-    const len = sampleRate * 2;
-    const buf = ctx.createBuffer(1, len, sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = buf;
-    noiseSrc.loop = true;
-
-    const bp = ctx.createBiquadFilter();
-    bp.type = "bandpass";
-    bp.frequency.setValueAtTime(250, now);
-    bp.Q.setValueAtTime(1.4, now);
-
-    const nGain = ctx.createGain();
-    nGain.gain.setValueAtTime(0.18, now);
-    noiseSrc.connect(bp);
-    bp.connect(nGain);
-    nGain.connect(master);
-    noiseSrc.start(now);
-
-    this.droneNodes = [
-      { stop: () => osc1.stop() },
-      { stop: () => osc2.stop() },
-      { stop: () => lfo.stop() },
-      { stop: () => noiseSrc.stop() },
-    ];
-  }
-
-  private stopAmbient() {
-    if (!this.ctx || !this.droneMaster) return;
-    const now = this.ctx.currentTime;
-    const master = this.droneMaster;
-    const nodes = this.droneNodes;
-    this.droneMaster = null;
-    this.droneNodes = [];
-
-    master.gain.cancelScheduledValues(now);
-    master.gain.setValueAtTime(Math.max(0.0001, master.gain.value), now);
-    master.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
-
-    window.setTimeout(() => {
-      nodes.forEach((n) => {
-        try {
-          n.stop();
-        } catch {
-          /* already stopped */
-        }
-      });
-      master.disconnect();
-    }, 400);
-  }
-
   setEnabled(on: boolean) {
     this.enabled = on;
+    try {
+      if (on) localStorage.removeItem(MUTE_STORAGE_KEY);
+      else localStorage.setItem(MUTE_STORAGE_KEY, "1");
+    } catch {
+      /* ignore */
+    }
     if (on) {
-      this.startAmbient();
+      this.ensure();
+      this.startBgm();
       this.playTick(540, 0.045);
     } else {
-      this.stopAmbient();
+      this.stopBgm();
     }
   }
 
-  playTick(freq = 640, gainPeak = 0.032) {
+  playTick(freq = 640, gainPeak = 0.036) {
     const ctx = this.ensure();
     if (!ctx) return;
     const now = ctx.currentTime;
@@ -150,7 +175,6 @@ class SoundEngine {
     osc.start(now);
     osc.stop(now + 0.045);
 
-    // Subtle mechanical key thump
     const thump = ctx.createOscillator();
     const tGain = ctx.createGain();
     thump.type = "sine";
@@ -173,7 +197,7 @@ class SoundEngine {
     osc.type = "sawtooth";
     osc.frequency.setValueAtTime(155, now);
     osc.frequency.exponentialRampToValueAtTime(48, now + 0.18);
-    gain.gain.setValueAtTime(0.055, now);
+    gain.gain.setValueAtTime(0.06, now);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
     osc.connect(gain);
     gain.connect(ctx.destination);
@@ -192,7 +216,7 @@ class SoundEngine {
       const t0 = now + idx * 0.042;
       osc.frequency.setValueAtTime(freq, t0);
       osc.frequency.exponentialRampToValueAtTime(freq * 0.65, t0 + 0.03);
-      gain.gain.setValueAtTime(0.024, t0);
+      gain.gain.setValueAtTime(0.03, t0);
       gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.034);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -206,26 +230,24 @@ class SoundEngine {
     if (!ctx) return;
     const now = ctx.currentTime;
 
-    // Deep impact thud 180 -> 40 Hz
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "sawtooth";
     osc.frequency.setValueAtTime(180, now);
     osc.frequency.exponentialRampToValueAtTime(40, now + 0.22);
-    gain.gain.setValueAtTime(0.085, now);
+    gain.gain.setValueAtTime(0.095, now);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start(now);
     osc.stop(now + 0.27);
 
-    // Crisp claw snap transient
     const snap = ctx.createOscillator();
     const sGain = ctx.createGain();
     snap.type = "triangle";
     snap.frequency.setValueAtTime(1600, now);
     snap.frequency.exponentialRampToValueAtTime(280, now + 0.045);
-    sGain.gain.setValueAtTime(0.06, now);
+    sGain.gain.setValueAtTime(0.07, now);
     sGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
     snap.connect(sGain);
     sGain.connect(ctx.destination);
@@ -242,7 +264,7 @@ class SoundEngine {
     osc.type = "sine";
     osc.frequency.setValueAtTime(480, now);
     osc.frequency.exponentialRampToValueAtTime(190, now + 0.11);
-    gain.gain.setValueAtTime(0.036, now);
+    gain.gain.setValueAtTime(0.042, now);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
     osc.connect(gain);
     gain.connect(ctx.destination);
@@ -255,20 +277,18 @@ class SoundEngine {
     if (!ctx) return;
     const now = ctx.currentTime;
 
-    // Deep fracture punch 220 -> 55 Hz
     const punch = ctx.createOscillator();
     const pGain = ctx.createGain();
     punch.type = "sawtooth";
     punch.frequency.setValueAtTime(220, now);
     punch.frequency.exponentialRampToValueAtTime(55, now + 0.16);
-    pGain.gain.setValueAtTime(0.085, now);
+    pGain.gain.setValueAtTime(0.095, now);
     pGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
     punch.connect(pGain);
     pGain.connect(ctx.destination);
     punch.start(now);
     punch.stop(now + 0.2);
 
-    // High-frequency glass fracture crackle bursts (1800-4200 Hz bandpass)
     const sampleRate = ctx.sampleRate;
     const len = Math.floor(sampleRate * 0.28);
     const buf = ctx.createBuffer(1, len, sampleRate);
@@ -286,7 +306,7 @@ class SoundEngine {
     bp.Q.setValueAtTime(0.9, now);
 
     const nGain = ctx.createGain();
-    nGain.gain.setValueAtTime(0.14, now);
+    nGain.gain.setValueAtTime(0.16, now);
     nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.27);
     src.connect(bp);
     bp.connect(nGain);
@@ -303,7 +323,7 @@ class SoundEngine {
       const gain = ctx.createGain();
       osc.type = "sine";
       osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-      gain.gain.setValueAtTime(0.05, now + idx * 0.06);
+      gain.gain.setValueAtTime(0.055, now + idx * 0.06);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.16);
       osc.connect(gain);
       gain.connect(ctx.destination);

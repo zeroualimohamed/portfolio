@@ -46,7 +46,7 @@ export function HudHeader({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filledBlocks, setFilledBlocks] = useState(1);
   const [scrolled, setScrolled] = useState(false);
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(() => soundEngine.enabled);
 
   useEffect(() => {
     onDrawerToggle(drawerOpen);
