@@ -177,6 +177,7 @@ export function BugHunterOverlay({ triggerSignal, vibeRgb }: BugHunterOverlayPro
     let bugTargetY = 0;
     let portalX = 0;
     let portalY = 0;
+    let lastEdge = -1;
     let crackSegments: CrackSegment[] = [];
     let rafId = 0;
 
@@ -483,12 +484,57 @@ export function BugHunterOverlay({ triggerSignal, vibeRgb }: BugHunterOverlayPro
 
     startEventRef.current = () => {
       cancelAnimationFrame(rafId);
-      crackX = w * (w < 640 ? 0.72 : 0.54);
-      crackY = h * (h < 640 ? 0.24 : 0.17);
-      bugTargetX = w * (w < 640 ? 0.54 : 0.45);
-      bugTargetY = h * 0.43;
+
+      // Randomize entry edge (0=top, 1=right, 2=left, 3=bottom), avoiding immediate repeat
+      let edge = Math.floor(Math.random() * 4);
+      if (edge === lastEdge) edge = (edge + 1 + Math.floor(Math.random() * 3)) % 4;
+      lastEdge = edge;
+
+      const padX = Math.max(90, w * 0.14);
+      const minTargetX = Math.max(120, w * 0.2);
+      const maxTargetX = Math.min(w - 120, w * 0.8);
+      const minTargetY = Math.max(170, h * 0.24);
+      const maxTargetY = Math.min(h - 235, h * 0.56);
+      const safeTargetY = Math.max(minTargetY, maxTargetY);
+
+      const randRange = (a: number, b: number) => a + Math.random() * Math.max(1, b - a);
+
+      if (edge === 0) {
+        // From above
+        crackX = randRange(padX, w - padX);
+        crackY = randRange(Math.max(88, h * 0.1), Math.max(130, h * 0.19));
+        bugTargetX = randRange(minTargetX, maxTargetX);
+        bugTargetY = randRange(Math.max(minTargetY, h * 0.34), safeTargetY);
+      } else if (edge === 1) {
+        // From right
+        crackX = randRange(w * 0.82, Math.max(w * 0.84, w - 58));
+        crackY = randRange(Math.max(115, h * 0.16), h * 0.72);
+        bugTargetX = randRange(minTargetX, Math.min(maxTargetX, w * 0.58));
+        bugTargetY = randRange(minTargetY, safeTargetY);
+      } else if (edge === 2) {
+        // From left
+        crackX = randRange(Math.min(58, w * 0.08), Math.max(85, w * 0.18));
+        crackY = randRange(Math.max(115, h * 0.16), h * 0.72);
+        bugTargetX = randRange(Math.max(minTargetX, w * 0.42), maxTargetX);
+        bugTargetY = randRange(minTargetY, safeTargetY);
+      } else {
+        // From below
+        crackX = randRange(padX, w - padX);
+        crackY = randRange(h * 0.78, Math.max(h * 0.8, h - 68));
+        bugTargetX = randRange(minTargetX, maxTargetX);
+        bugTargetY = randRange(minTargetY, Math.max(minTargetY, h * 0.42));
+      }
+
       portalX = bugTargetX;
-      portalY = bugTargetY + 145;
+      portalY = Math.min(h - 95, bugTargetY + 145);
+
+      // Keep portal clear of the fracture origin
+      if (Math.hypot(portalX - crackX, portalY - crackY) < 135) {
+        const shift = crackX > w * 0.5 ? -160 : 160;
+        bugTargetX = Math.max(minTargetX, Math.min(maxTargetX, bugTargetX + shift));
+        portalX = bugTargetX;
+      }
+
       crackSegments = generateCrackBranches(crackX, crackY);
       spawnPlayed = false;
       grabPlayed = false;

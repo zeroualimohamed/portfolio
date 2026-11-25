@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
 import type { CopyDict } from "../data/i18n";
@@ -13,7 +13,11 @@ interface ContactSectionProps {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const LIKE_KEY = "zrwlx3-likes";
+const LIKE_COUNT_KEY = "zrwlx3-likes-cache";
+const LIKED_FLAG_KEY = "zrwlx3-liked-v1";
+const LIKE_API_BASE = "https://abacus.jasoncameron.dev";
+const LIKE_NAMESPACE = "zerouali.me";
+const LIKE_COUNTER_NAME = "likes";
 
 const HEART_MASK = [
   "  .###.   .###.  ",
@@ -31,12 +35,20 @@ const HEART_GLYPHS = "+:/*%0[{$]}&=";
 export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
   const [likes, setLikes] = useState<number>(() => {
     try {
-      const saved = Number(localStorage.getItem(LIKE_KEY));
-      return Number.isFinite(saved) && saved > 0 ? saved : 21;
+      const saved = Number(localStorage.getItem(LIKE_COUNT_KEY));
+      return Number.isFinite(saved) && saved >= 0 ? saved : 0;
     } catch {
-      return 21;
+      return 0;
     }
   });
+  const [hasLiked, setHasLiked] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(LIKED_FLAG_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const likingRef = useRef(false);
   const [heartPop, setHeartPop] = useState(0);
   const [heartFrame, setHeartFrame] = useState(0);
 
@@ -50,6 +62,33 @@ export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
     kind: "",
   });
   const [sending, setSending] = useState(false);
+
+  // Load global persistent like count on mount
+  useEffect(() => {
+    if (window.location.protocol === "file:") return;
+    let cancelled = false;
+    fetch(`${LIKE_API_BASE}/get/${LIKE_NAMESPACE}/${LIKE_COUNTER_NAME}`)
+      .then(async (res) => {
+        if (res.status === 404) return { value: 0 };
+        if (!res.ok) return null;
+        return (await res.json()) as { value?: number };
+      })
+      .then((data) => {
+        if (cancelled || !data || typeof data.value !== "number") return;
+        setLikes(data.value);
+        try {
+          localStorage.setItem(LIKE_COUNT_KEY, String(data.value));
+        } catch {
+          /* ignore */
+        }
+      })
+      .catch(() => {
+        /* keep cached count */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Shimmering animated ASCII glyph heart
   useEffect(() => {
@@ -68,11 +107,20 @@ export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
   ).join("\n");
 
   const tapHeart = () => {
+    if (hasLiked || likingRef.current) return;
+    likingRef.current = true;
+    setHasLiked(true);
+    try {
+      localStorage.setItem(LIKED_FLAG_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+
     soundEngine.playHeart();
     setLikes((prev) => {
       const next = prev + 1;
       try {
-        localStorage.setItem(LIKE_KEY, String(next));
+        localStorage.setItem(LIKE_COUNT_KEY, String(next));
       } catch {
         /* ignore */
       }
@@ -80,6 +128,29 @@ export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
     });
     setHeartPop((p) => p + 1);
     onHeartPulse();
+
+    if (window.location.protocol !== "file:") {
+      fetch(`${LIKE_API_BASE}/hit/${LIKE_NAMESPACE}/${LIKE_COUNTER_NAME}`)
+        .then((res) => (res.ok ? (res.json() as Promise<{ value?: number }>) : null))
+        .then((data) => {
+          if (data && typeof data.value === "number") {
+            setLikes(data.value);
+            try {
+              localStorage.setItem(LIKE_COUNT_KEY, String(data.value));
+            } catch {
+              /* ignore */
+            }
+          }
+        })
+        .catch(() => {
+          /* keep optimistic count */
+        })
+        .finally(() => {
+          likingRef.current = false;
+        });
+    } else {
+      likingRef.current = false;
+    }
   };
 
   const validateField = (field: "name" | "email" | "message", val: string) => {
@@ -263,15 +334,23 @@ export function ContactSection({ copy, onHeartPulse }: ContactSectionProps) {
                 key={heartPop}
                 type="button"
                 onClick={tapHeart}
+                disabled={hasLiked}
+                aria-pressed={hasLiked}
                 initial={{ scale: 0.94 }}
                 animate={{ scale: [0.94, 1.09, 1] }}
                 transition={{ duration: 0.28 }}
-                aria-label="Send a like"
-                className="vibe-sync cursor-pointer bg-transparent p-1 text-left font-mono text-[10px] leading-[1.15] text-accent drop-shadow-[0_0_12px_rgba(var(--accent-rgb),0.45)] hover:opacity-90"
+                aria-label={hasLiked ? "Already liked" : "Send a like"}
+                className={`vibe-sync bg-transparent p-1 text-left font-mono text-[10px] leading-[1.15] text-accent drop-shadow-[0_0_12px_rgba(var(--accent-rgb),0.45)] ${
+                  hasLiked ? "cursor-default opacity-85" : "cursor-pointer hover:opacity-90"
+                }`}
               >
                 <pre className="m-0">{renderedHeart}</pre>
                 <span className="mt-2 block font-display text-lg font-bold text-accent">
-                  {likes} <span className="font-mono text-xs font-normal text-ink-muted">{copy.likeCountLabel}</span>
+                  {likes}{" "}
+                  <span className="font-mono text-xs font-normal text-ink-muted">
+                    {copy.likeCountLabel}
+                    {hasLiked ? " · +1" : ""}
+                  </span>
                 </span>
               </motion.button>
 
