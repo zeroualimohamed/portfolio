@@ -106,6 +106,6 @@ Pushing to `main` triggers `.github/workflows/deploy.yml`, which installs depend
 
 ## Contact
 
-- Email: [mohamed.zeroualixxx@gmail.com](mailto:mohamed.zeroualixxx@gmail.com)
+- Email: [mohamed.zerouali.xxx@gmail.com](mailto:mohamed.zerouali.xxx@gmail.com)
 - GitHub: [github.com/zeroualimohamed](https://github.com/zeroualimohamed)
 - LinkedIn: [linkedin.com/in/mohamed-zerouali-aa413b407](https://www.linkedin.com/in/mohamed-zerouali-aa413b407/)

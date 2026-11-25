@@ -268,9 +268,9 @@ export const COPY: Record<Lang, CopyDict> = {
     errEmail: "Enter a valid email address",
     fFix: "Please fix the highlighted fields.",
     fMailto: "Opening your email app with the message ready to send.",
-    fReadyNote: "Message validated. Reach out directly at mohamed.zeroualixxx@gmail.com.",
+    fReadyNote: "Message validated. Reach out directly at mohamed.zerouali.xxx@gmail.com.",
     fSent: "Message sent. I will get back to you soon.",
-    fFail: "Could not send right now. Write directly to mohamed.zeroualixxx@gmail.com.",
+    fFail: "Could not send right now. Write directly to mohamed.zerouali.xxx@gmail.com.",
 
     ftRights: "Mohamed Zerouali · EMSI Fès 4IIRF",
     ftTop: "Back to top",
@@ -414,9 +414,9 @@ export const COPY: Record<Lang, CopyDict> = {
     errEmail: "Saisissez une adresse e-mail valide",
     fFix: "Veuillez corriger les champs signalés.",
     fMailto: "Ouverture de votre messagerie avec le message prêt à l'envoi.",
-    fReadyNote: "Message validé. Contact direct : mohamed.zeroualixxx@gmail.com.",
+    fReadyNote: "Message validé. Contact direct : mohamed.zerouali.xxx@gmail.com.",
     fSent: "Message envoyé. Je réponds rapidement.",
-    fFail: "Envoi impossible pour le moment. Écrivez à mohamed.zeroualixxx@gmail.com.",
+    fFail: "Envoi impossible pour le moment. Écrivez à mohamed.zerouali.xxx@gmail.com.",
 
     ftRights: "Mohamed Zerouali · EMSI Fès 4IIRF",
     ftTop: "Haut de page",

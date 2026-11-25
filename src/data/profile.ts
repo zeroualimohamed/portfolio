@@ -1,8 +1,8 @@
 /* Mohamed Zerouali (zrwlx) · Real Profile & Stack Data */
 
 export const PROFILE_LINKS = {
-  email: "mohamed.zeroualixxx@gmail.com",
-  formEndpoint: "https://formsubmit.co/ajax/mohamed.zeroualixxx@gmail.com",
+  email: "mohamed.zerouali.xxx@gmail.com",
+  formEndpoint: "https://formsubmit.co/ajax/mohamed.zerouali.xxx@gmail.com",
   github: "https://github.com/zeroualimohamed",
   linkedin: "https://www.linkedin.com/in/mohamed-zerouali-aa413b407/",
 } as const;
