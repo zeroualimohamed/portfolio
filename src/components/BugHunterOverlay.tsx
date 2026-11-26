@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 import { soundEngine } from "../lib/sound";
 
+export const bugTrackState = {
+  active: false,
+  x: 0,
+  y: 0,
+};
+
 interface BugHunterOverlayProps {
   triggerSignal: number;
   vibeRgb: [number, number, number];
@@ -198,6 +204,7 @@ export function BugHunterOverlay({ triggerSignal, vibeRgb }: BugHunterOverlayPro
       const elapsed = (now - startTime) * 0.001; // 0..4.35s
       if (elapsed >= 4.4 || reduceMotion) {
         active = false;
+        bugTrackState.active = false;
         ctx.clearRect(0, 0, w, h);
         return;
       }
@@ -294,7 +301,16 @@ export function BugHunterOverlay({ triggerSignal, vibeRgb }: BugHunterOverlayPro
       } else if (elapsed >= 2.95 && elapsed < 3.65) {
         showBug = false; // swallowed into fist
         const dp = (elapsed - 2.95) / 0.7;
+        bugX = portalX;
         bugY = bugTargetY + (portalY + 120 - bugTargetY) * (dp * dp);
+      }
+
+      if (elapsed >= 0.05 && elapsed < 3.65) {
+        bugTrackState.active = true;
+        bugTrackState.x = elapsed < 0.35 ? crackX : bugX;
+        bugTrackState.y = elapsed < 0.35 ? crackY : bugY;
+      } else {
+        bugTrackState.active = false;
       }
 
       // -----------------------------------------------------------------------
@@ -546,6 +562,7 @@ export function BugHunterOverlay({ triggerSignal, vibeRgb }: BugHunterOverlayPro
 
     return () => {
       cancelAnimationFrame(rafId);
+      bugTrackState.active = false;
       window.removeEventListener("resize", resize);
     };
   }, []);

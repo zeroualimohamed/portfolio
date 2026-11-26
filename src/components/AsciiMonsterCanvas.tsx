@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { bugTrackState } from "./BugHunterOverlay";
 import { soundEngine } from "../lib/sound";
 
 interface AsciiMonsterCanvasProps {
@@ -127,17 +128,34 @@ export function AsciiMonsterCanvas({ vibeRgb, pingSignal }: AsciiMonsterCanvasPr
         curRgb[1] += (tgt[1] - curRgb[1]) * 0.08;
         curRgb[2] += (tgt[2] - curRgb[2]) * 0.08;
 
-        pointer.x += (pointer.tx - pointer.x) * 0.085;
-        pointer.y += (pointer.ty - pointer.y) * 0.085;
+        let targetX = pointer.tx;
+        let targetY = pointer.ty;
+        let gazeSpeed = 0.085;
+        let gazeBoost = 1.0;
 
-        const distC = Math.hypot(pointer.tx, pointer.ty);
-        const tgtFocus = Math.max(0, Math.min(1, 1.25 - distC));
-        pointer.focus += (tgtFocus - pointer.focus) * 0.08;
+        if (bugTrackState.active) {
+          const r = host.getBoundingClientRect();
+          const cx = r.left + r.width * 0.5;
+          const cy = r.top + r.height * 0.5;
+          targetX = Math.max(-1.25, Math.min(1.25, (bugTrackState.x - cx) / (window.innerWidth * 0.36)));
+          targetY = Math.max(-1.25, Math.min(1.25, (bugTrackState.y - cy) / (window.innerHeight * 0.36)));
+          gazeSpeed = 0.22;
+          gazeBoost = 1.35;
+        }
+
+        pointer.x += (targetX - pointer.x) * gazeSpeed;
+        pointer.y += (targetY - pointer.y) * gazeSpeed;
+
+        const distC = Math.hypot(targetX, targetY);
+        const tgtFocus = bugTrackState.active ? 1.0 : Math.max(0, Math.min(1, 1.25 - distC));
+        pointer.focus += (tgtFocus - pointer.focus) * 0.1;
 
         if (glitchRef.current > 0.01) glitchRef.current *= 0.9;
         else glitchRef.current = 0;
 
-        if (!reduceMotion && now > nextBlink) {
+        if (bugTrackState.active) {
+          blinking = false;
+        } else if (!reduceMotion && now > nextBlink) {
           const dt = now - nextBlink;
           if (dt < 175) {
             blinking = true;
@@ -167,9 +185,9 @@ export function AsciiMonsterCanvas({ vibeRgb, pingSignal }: AsciiMonsterCanvasPr
         const centerY = height * 0.5;
         const radius = minSide * 0.48;
 
-        // Slight cursor follow shift of inner void cavity & gaze
-        const lookX = pointer.x * cw * 2.2;
-        const lookY = pointer.y * ch * 1.4;
+        // Gaze follow shift (tracks active bug or cursor)
+        const lookX = pointer.x * cw * 2.2 * gazeBoost;
+        const lookY = pointer.y * ch * 1.4 * gazeBoost;
 
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
