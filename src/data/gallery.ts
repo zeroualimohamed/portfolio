@@ -379,33 +379,7 @@ export const GALLERY_DATA: GalleryManifest = {
         "mood": "Amber Flame"
       }
     },
-    {
-      "index": 13,
-      "slug": "sacrifice-study",
-      "title": "Altar Study",
-      "series": "3D Square Study",
-      "featured": false,
-      "orientation": "square",
-      "origWidth": 3000,
-      "origHeight": 3000,
-      "origBytes": 14116022,
-      "thumbWidth": 640,
-      "thumbHeight": 640,
-      "thumbBytes": 38244,
-      "fullWidth": 1800,
-      "fullHeight": 1800,
-      "fullBytes": 399882,
-      "fullJpgBytes": 461983,
-      "thumb": "./assets/gallery/thumbs/sacrifice-study.webp",
-      "full": "./assets/gallery/full/sacrifice-study.webp",
-      "fullJpg": "./assets/gallery/full/sacrifice-study.jpg",
-      "vibe": {
-        "accent": "#e05084",
-        "rgb": "224, 80, 132",
-        "tint": "#1c0f13",
-        "mood": "Crimson Ember"
-      }
-    },
+
     {
       "index": 14,
       "slug": "meadow-figure",
