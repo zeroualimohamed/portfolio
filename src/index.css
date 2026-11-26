@@ -71,6 +71,38 @@ body {
   color: var(--on-accent);
 }
 
+/* Custom obsidian + live-accent terminal scrollbar (replaces default grey OS bar) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid rgba(var(--accent-rgb), 0.16);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--accent-rgb), 0.55);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+::-webkit-scrollbar-corner {
+  background: var(--bg);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--bg);
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
